@@ -1,0 +1,47 @@
+{
+  "name": "wkhtmltopdf-update",
+  "description": "Installs wkhtmltoimage and wkhtmltopdf",
+  "long_description": "# chef-wkhtmltopdf [![Build Status](https://travis-ci.org/BallisticPain/chef-wkhtmltopdf.svg?branch=master)](http://travis-ci.org/BallisticPain/chef-wkhtmltopdf)\n\n## Description\n\nInstalls [wkhtmltopdf](http://wkhtmltopdf.org) static binaries. This cookbook is inspired by https://github.com/bflad/chef-wkhtmltopdf.\n\nCookbook Compatibility:\n\n * chef-wkhtmltopdf 0.3.0: wkhtmltopdf 0.12.2\n * chef-wkhtmltopdf 0.3.1: wkhtmltopdf 0.12.2.1\n * chef-wkhtmltopdf 0.4.0: wkhtmltopdf 0.12.2.1\n * chef-wkhtmltopdf 0.4.1: wkhtmltopdf 0.12.2.1\n * chef-wkhtmltopdf 0.4.2: wkhtmltopdf 0.12.2.1\n\n## Requirements\n\n### Platforms\n\n* CentOS 6\n* RedHat 6\n* Ubuntu 12.04\n* Ubuntu 13.04\n* Ubuntu 14.04\n* Ubuntu 14.10\n\n### Cookbooks\n\n[Opscode Cookbooks](https://github.com/opscode-cookbooks/)\n\n* [apt](https://github.com/opscode-cookbooks/apt)\n\n## Attributes\n\nThese attributes are under the `node['wkhtmltopdf-update']` namespace.\n\nAttribute | Description | Type | Default\n----------|-------------|------|--------\ndependency_packages | Packages that contain wkhtmltopdf dependencies | String | (auto-detected, see attributes/default.rb)\ninstall_dir | directory to install static binaries | String | /usr/local/bin\nlib_dir | directory to install libraries | String | ''\nmirror_url | URL for wkhtmltopdf | String | (auto-detected, see attributes/default.rb)\nplatform | wkhtmltopdf platform and architecture | String | (auto-detected, see attributes/default.rb)\nversion | wkhtmltopdf version to install | String | 0.12.2.1\n\n## Recipes\n\n* `recipe[wkhtmltopdf-update]` Installs wkhtmltoimage and wkhtmltopdf\n* `recipe[wkhtmltopdf-update::binary]` Installs wkhtmltoimage and wkhtmltopdf static binaries\n\n## Usage\n\n* Add recipe(s) to node's run list\n\n## Testing and Development\n\nHere's how you can quickly get testing or developing against the cookbook thanks to [Vagrant](http://vagrantup.com/) and [Berkshelf](http://berkshelf.com/).\n\n    vagrant plugin install vagrant-berkshelf\n    vagrant plugin install vagrant-cachier\n    vagrant plugin install vagrant-omnibus\n    git clone git://github.com/ballisticpain/chef-wkhtmltopdf.git\n    cd chef-wkhtmltopdf\n    vagrant up BOX # BOX being centos5, centos6, debian7, fedora18, fedora19, fedora20, freebsd9, ubuntu1204, ubuntu1210, ubuntu1304, ubuntu1310, ubuntu1404, or ubuntu1410\n\nYou can then SSH into the running VM using the `vagrant ssh BOX` command.\n\nThe VM can easily be stopped and deleted with the `vagrant destroy` command. Please see the official [Vagrant documentation](http://docs.vagrantup.com/v2/cli/index.html) for a more in depth explanation of available commands.\n\nAll vagrant up BOX commands will use VirtualBox with the exception of ubuntu14* boxes being able to use either VirtualBox or Parallels depending on what your local provider is set to.\n\n## Contributing\n\nPlease use standard Github issues/pull requests and if possible, in combination with testing on the Vagrant boxes.\n\n## Maintainers\n\n* Brian Flad (<bflad417@gmail.com>) [Deprecated ... He's no longer maintaining or merging pull requests. Decided to fork and start fresh.]\n* Jarvis Stubblefield (jarvis@vortexrevolutions.com)\n\n## License\n\nPlease see licensing information in: [LICENSE](LICENSE)\n",
+  "maintainer": "Jarvis Stubblefield",
+  "maintainer_email": "jarvis@vortexrevolutions.com",
+  "license": "Apache 2.0",
+  "platforms": {
+    "amazon": ">= 0.0.0",
+    "centos": ">= 0.0.0",
+    "debian": ">= 0.0.0",
+    "fedora": ">= 0.0.0",
+    "redhat": ">= 0.0.0",
+    "ubuntu": ">= 0.0.0"
+  },
+  "dependencies": {
+    "apt": ">= 0.0.0"
+  },
+  "recommendations": {
+
+  },
+  "suggestions": {
+
+  },
+  "conflicting": {
+
+  },
+  "providing": {
+
+  },
+  "replacing": {
+    "wkhtmltopdf": ">= 0.0.0"
+  },
+  "attributes": {
+
+  },
+  "groupings": {
+
+  },
+  "recipes": {
+    "wkhtmltopdf-update": "Installs the latest wkhtmltoimage and wkhtmltopdf",
+    "wkhtmltopdf-update::binary": "Installs the latest wkhtmltoimage and wkhtmltopdf binaries"
+  },
+  "version": "0.4.2",
+  "source_url": "",
+  "issues_url": ""
+}

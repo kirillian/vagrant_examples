@@ -1,0 +1,42 @@
+{
+  "name": "redis-server",
+  "description": "Installs/Configures redis-server",
+  "long_description": "redis-server Cookbook\n=====================\nA Cookbook for managing the installation of Redis, the Open Source Key Value Store (<http://redis.io/>).\n\n\nRequirements\n------------\nUbuntu 12.04 or Higher. Requires the `apt` cookbook for adding PPA's.\n\nAttributes\n----------\nAvailable attributes and their default values:\n\n```\ndefault['redis-server']['appendonly'] = 'no'\ndefault['redis-server']['additional_configuration_values'] = {}\ndefault['redis-server']['bind'] = '127.0.0.1'\ndefault['redis-server']['daemonize'] = 'yes'\ndefault['redis-server']['databases'] = 16\ndefault['redis-server']['dbfilename'] = 'dump.rdb'\ndefault['redis-server']['dir'] = '/etc/redis/'\ndefault['redis-server']['logfile'] = '/var/log/redis/redis-server.log'\ndefault['redis-server']['loglevel'] = 'notice'\ndefault['redis-server']['package'] = 'redis-server'\ndefault['redis-server']['pidfile'] = '/var/run/redis/redis-server.pid'\ndefault['redis-server']['port'] = '6379'\ndefault['redis-server']['ppa'] = 'ppa:chris-lea/redis-server'\ndefault['redis-server']['rdbcompression'] = 'yes'\ndefault['redis-server']['save'] = [\n  '900 1',\n  '300 10',\n  '60 10000'\n]\ndefault['redis-server']['timeout'] = 300\n```\n\nThere is also an additional attribute `additional_configuration_values` which accepts a hash to allow the addition of arbitrary key value pairs to the configuration file. For example setting `additional_configuration_values` to the following:\n\n```\n{\n  'maxmemory' => 419430400,\n  'maxmemory-policy' => 'allkeys-lru',\n  'maxmemory-samples' => '10'\n}\n```\n\nWould result in the following configuration file entries:\n\n```\nmaxmemory 419430400\nmaxmemory-policy allkeys-lru\nmaxmemory-samples 10\n```\n\nUsage\n-----\n#### redis-server::default\nSimply include the recipe in the nodes `run_list`.\n\n```json\n{\n  \"name\":\"my_node\",\n  \"run_list\": [\n    \"recipe[redis-server]\"\n  ]\n}\n```\n",
+  "maintainer": "TalkingQuickly",
+  "maintainer_email": "ben@talkingquickly.co.uk",
+  "license": "All rights reserved",
+  "platforms": {
+  },
+  "dependencies": {
+    "apt": ">= 0.0.0"
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+  },
+  "version": "0.1.1",
+  "source_url": "",
+  "issues_url": "",
+  "privacy": false,
+  "chef_versions": [
+
+  ],
+  "ohai_versions": [
+
+  ],
+  "gems": [
+
+  ]
+}

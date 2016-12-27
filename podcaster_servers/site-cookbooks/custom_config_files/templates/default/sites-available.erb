@@ -1,0 +1,51 @@
+server {
+  listen   80;
+  server_name <%= @site %>;
+
+  if ($host ~* www\.(.*)) {
+    set $host_without_www $1;
+    rewrite ^(.*)$ http://$host_without_www$1 permanent;
+  }
+
+
+  location ~ ^/(assets)/  {
+    try_files /sites/$host$uri $uri @passenger;
+
+    root /var/www/<%= @site %>/current/public;
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+    add_header ETag "";
+    add_header Access-Control-Allow-Origin *;
+    add_header Access-Control-Request-Method *;
+  }
+
+  location / {
+    try_files /sites/$host$uri/index.html /sites/$host$uri $uri @passenger;
+    root /var/www/<%= @site %>/current/public;
+  }
+
+  location @passenger {
+    root /var/www/<%= @site %>/current/public;
+    passenger_enabled on;
+    passenger_app_env production;
+  }
+
+  error_page 503 @503;
+
+  # Return a 503 error if the maintenance page exists.
+  if (-f /var/www/<%= @site %>/shared/public/system/maintenance.html) {
+    return 503;
+  }
+
+  location @503 {
+    # Serve static assets if found.
+    if (-f $request_filename) {
+      break;
+    }
+
+    # Set root to the shared directory.
+    root /var/www/<%= @site %>/shared/public;
+    rewrite ^(.*)$ /system/maintenance.html break;
+  }
+}

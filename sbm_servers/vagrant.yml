@@ -1,0 +1,29 @@
+project:
+  name: &project_name sbm
+env:
+  RAILS_ENV: production
+  DEVISE_SECRET_KEY: xxxxxxxxxxx
+  SSN_SECRET_KEY: xxxxxxxxx
+  SECRET_KEY_BASE: xxxxxx
+  SENDGRID_USERNAME: xxxx@example.com
+  SENDGRID_PASSWORD: xxxxxxxxx
+  TRELLO_REPORTS_EMAIL_ADDRESS: xxxxxxxxxx@boards.trello.com
+postgresql:
+  host: xxx.xxx.xxx.xxx
+  username: *project_name
+  password: xxxxxxx
+redis:
+  host: xxx.xxx.xxx.xxx
+secrets:
+  key: xxxxxx
+forwarded_ports:
+  3000: 3000
+  25: 2225
+  1080: 1080
+  5432: 5432
+  27017: 27017
+aws:
+  access_key_id: xxxxx
+  secret_access_key: xxxxx
+  keypair_name: xxxxx
+  private_key_path: path/to/key/pair

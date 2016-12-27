@@ -1,0 +1,20 @@
+project:
+  name: &project_name podcaster
+postgresql:
+  username: *project_name
+  password: password
+forwarded_ports:
+  3000: 3000
+  25: 2225
+  1080: 1080
+  5432: 5432
+  27017: 27017
+  4000: 4000
+  6379: 6379
+vm:
+  cpu_count: 2
+  memory_size: 4096
+# Windows Specific stuff
+# vbguest:
+#  iso_path: "C:/Users/<your usernam>/.vagrant.d/tmp/VBoxGuestAdditions_5.0.14.iso"
+

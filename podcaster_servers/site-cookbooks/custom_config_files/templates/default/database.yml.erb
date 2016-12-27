@@ -1,0 +1,10 @@
+production:
+  adapter: postgresql
+  encoding: unicode
+  pool: 30
+  reaping_frequency: 10
+  database: podcaster_production
+  username: podcaster
+  host: <%= node['vagrant']['config']['postgresql']['url'] %>
+  username: <%= node['vagrant']['config']['postgresql']['username'] %>
+  password: <%= node['vagrant']['config']['postgresql']['password'] %>

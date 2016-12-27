@@ -1,0 +1,32 @@
+project:
+  name: &project_name podcaster
+env:
+  RAILS_ENV: production
+  DEVISE_SECRET_KEY: xxxxxx
+  SSN_SECRET_KEY: xxxxxx
+  SECRET_KEY_BASE: xxxxxxx
+  SENDGRID_USERNAME: xxxxx@example.com
+  SENDGRID_PASSWORD: xxxxx
+  SIDEKIQ_CONCURRENCY: 5
+  SIDEKIQ_TIMEOUT: 10
+  REDIS_URL: redis://localhost:6379
+  DATABASE_URL: postgres://localhost:5432/podcaster?pool=25&encoding=unicode&schema_search_path=public
+postgresql:
+  host: localhost
+  username: *project_name
+  password: xxxxxxx
+redis:
+  host: localhost
+secrets:
+  key: xxxxxx
+forwarded_ports:
+  3000: 3000
+  25: 2225
+  1080: 1080
+  5432: 5432
+  27017: 27017
+aws:
+  access_key_id: xxxxxx
+  secret_access_key: xxxxxx
+  keypair_name: xxxxxx
+  private_key_path: /path/to/key/pair

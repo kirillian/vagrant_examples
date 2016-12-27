@@ -1,0 +1,49 @@
+{
+  "aws" : {
+    "ami" : "ami-27150617",
+    "elastic_ip" : true,
+    "instance_type" : "m3.medium",
+    "region" : "us-west-2",
+    "security_groups" : [
+      "sg-20e55e44"
+    ],
+    "subnet_id" : "subnet-37284740",
+    "tags" : {
+      "Name" : "mongodb-1",
+      "type" : "mongodb"
+    }
+  },
+  "environment":"production",
+  "authorization": {
+    "sudo": {
+      "users": ["deploy", "vagrant", "johnepperson"]
+    },
+    "passwordless": true
+  },
+  // "monit": {
+  //   "enable_emails" : false,
+  //   "mailserver" : {
+  //     // For example Mailgun or Sendgrid
+  //     "host" : "REPLACE.example.com",
+  //     "port" : "999",
+  //     "username" : "REPLACE",
+  //     "password" : "REPLACE",
+  //     "hostname" : "REPLACE"
+  //   },
+  //   "notify_emails" : ["REPLACE@example.com"],
+  //   "web_interface" : {
+  //     // the plaintext monit username and password
+  //     "allow" : ["REPLACE(USERNAME)","REPLACE(PASSWORD)"]
+  //   }
+  // },
+  "vagrant" : {
+  // See http://www.talkingquickly.co.uk/2014/08/auto-generate-vagrant-machines-from-chef-node-definitions/ for more on this
+    "exclusions" : [],
+    "name" : "mongodb-server-1"
+  },
+  "run_list":
+  [
+    "role[server]",
+    "role[mongo-server]"
+  ]
+}

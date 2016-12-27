@@ -1,0 +1,5 @@
+project:
+  name: &project_name ConstructionMetalProducts
+postgres:
+  username: contruction_metal_products
+  password: password

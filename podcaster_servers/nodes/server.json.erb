@@ -1,0 +1,113 @@
+{
+  "aws" : {
+    "ami" : "ami-7df25b1d",
+    "elastic_ip" : "xxx.xxx.xxx.xxx",
+    "instance_type" : "t2.small",
+    "region" : "us-west-2",
+    "security_groups" : [
+      "sg-d820b6bc"
+    ],
+    "subnet_id" : "subnet-e294c787",
+    "tags" : {
+      "Name" : "app-1",
+      "type" : "app"
+    },
+    "volume_size" : 32
+  },
+  "environment":"production",
+  "authorization": {
+    "sudo": {
+      "users": ["deploy", "ubuntu", "vagrant", "johnepperson"]
+    },
+    "passwordless": true
+  },
+  "locales": {
+    "locale_file": "/etc/locale.gen"
+  },
+  "redis-server" : {
+    "bind" : "0.0.0.0"
+  },
+  "rbenv":{
+    "rubies": [
+      "2.3.1"
+    ],
+    "global" : "2.3.1",
+    "gems": {
+      "2.3.1" : [
+        {"name":"bundler"}
+      ]
+    }
+  },
+  "postgresql" : {
+    "password" : {
+      "postgres" : "<%= `echo -n '#{ENV['postgresql_password']}''#{ENV['postgresql_username']}' | openssl md5 | sed -e 's/.* /md5/'`.strip %>",
+      "<%= ENV['postgresql_username'] %>" : "<%= `echo -n '#{ENV['postgresql_password']}''#{ENV['postgresql_username']}' | openssl md5 | sed -e 's/.* /md5/'`.strip %>"
+    },
+    "pg_hba" : [
+      {
+        "type": "local",
+        "db": "all",
+        "user": "<%= ENV['postgresql_username'] %>",
+        "method": "trust"
+      },
+      {
+        "type" : "host",
+        "db" : "all",
+        "user" : "all",
+        "addr" : "0.0.0.0/0",
+        "method" : "md5"
+      }
+    ]
+  },
+  "vagrant" : {
+  // See http://www.talkingquickly.co.uk/2014/08/auto-generate-vagrant-machines-from-chef-node-definitions/ for more on this
+    "config" : {
+      "mail" : {
+        "username" : "xxxxx@example.com",
+        "password" : "xxxxxx"
+      },
+      "postgresql" : {
+        "url" : "<%= ENV['postgresql_host'] %>",
+        "username": "<%= ENV['postgresql_username'] %>",
+        "password" : "<%= ENV['postgresql_password'] %>"
+      },
+      "redis" : {
+        "host" : "<%= ENV['redis_host'] %>",
+        "port" : "6379"
+      },
+      "secrets" : {
+        "key" : "<%= ENV['secrets_key'] %>"
+      },
+      "sidekiq" : {
+        "concurrency" : 10,
+        "worker_count" : 3,
+        "queues" : {
+          "default" : 1
+        },
+        "daemonized" : true
+      }
+    },
+    "exclusions" : [],
+    "name" : "rails-server-1",
+    "postgresql" : {
+      "plaintext_password" : {
+        "<%= ENV['postgresql_username'] %>" : "<%= ENV['postgresql_password'] %>"
+      }
+    },
+    "sites" : [
+      "example.com"
+    ]
+  },
+  "run_list":
+  [
+    "role[server]",
+    "role[rails-app]",
+    "role[nginx-server]",
+    "role[postgres-server]",
+    "role[redis-server]",
+    "role[sidekiq-server]",
+    "recipe[custom_config_files::sidekiq-server]",
+    "recipe[custom_config_files::nginx-server]",
+    "recipe[environment_variables]"
+  ]
+}

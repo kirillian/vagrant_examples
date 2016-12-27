@@ -1,0 +1,10 @@
+---
+:processes: <%= node['vagrant']['config']['sidekiq']['worker_count'] %>
+:concurrency: <%= node['vagrant']['config']['sidekiq']['concurrency'] %>
+:pidfile: tmp/pids/sidekiq.pid
+:logfile: ./log/sidekiq.log
+:queues:
+  <% node['vagrant']['config']['sidekiq']['queues'].each do |queue, count| %>
+  <%= "- [#{queue}, #{count}]" %>
+  <% end %>
+:daemon: <%= node['vagrant']['config']['sidekiq']['daemonized'] %>

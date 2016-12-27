@@ -1,0 +1,87 @@
+{
+  "aws" : {
+    "ami" : "ami-27150617",
+    "elastic_ip" : "xxx.xxx.xxx.xxx",
+    "instance_type" : "t2.small",
+    "region" : "us-west-2",
+    "security_groups" : [
+      "sg-d820b6bc"
+    ],
+    "subnet_id" : "subnet-e294c787",
+    "tags" : {
+      "Name" : "app-1",
+      "type" : "app"
+    },
+    "volume_size" : 16
+  },
+  "environment":"production",
+  "authorization": {
+    "sudo": {
+      "users": ["deploy", "vagrant", "johnepperson"]
+    },
+    "passwordless": true
+  },
+  // "monit": {
+  //   "enable_emails" : false,
+  //   "mailserver" : {
+  //     // For example Mailgun or Sendgrid
+  //     "host" : "REPLACE.example.com",
+  //     "port" : "999",
+  //     "username" : "REPLACE",
+  //     "password" : "REPLACE",
+  //     "hostname" : "REPLACE"
+  //   },
+  //   "notify_emails" : ["REPLACE@example.com"],
+  //   "web_interface" : {
+  //     // the plaintext monit username and password
+  //     "allow" : ["REPLACE(USERNAME)","REPLACE(PASSWORD)"]
+  //   }
+  // },
+  // "postgresql" : {
+  //   "password" : {
+  //     // this should be generated with:
+  //     // openssl passwd -1 "plaintextpassword"
+  //     "postgres" : "REPLACE"
+  //   }
+  // },
+  "rbenv":{
+    "rubies": [
+      "2.2.5"
+    ],
+    "global" : "2.2.5",
+    "gems": {
+      "2.2.5" : [
+        {"name":"bundler"}
+      ]
+    }
+  },
+  "vagrant" : {
+  // See http://www.talkingquickly.co.uk/2014/08/auto-generate-vagrant-machines-from-chef-node-definitions/ for more on this
+    "config" : {
+      "postgresql" : {
+        "url" : "<%= ENV['postgresql_host'] %>",
+        "password" : "<%= ENV['postgresql_password'] %>"
+      },
+      "redis" : {
+        "host" : "<%= ENV['redis_host'] %>",
+        "port" : "6379"
+      },
+      "secrets" : {
+        "key" : "<%= ENV['secrets_key'] %>"
+      }
+    },
+    "exclusions" : [],
+    "name" : "rails-server-1",
+    "sites" : [
+      "1silo.com"
+    ]
+  },
+  "run_list":
+  [
+    "role[server]",
+    "role[rails-app]",
+    "role[nginx-server]",
+    "recipe[custom_config_files::nginx-server]",
+    "recipe[environment_variables]"
+  ]
+}

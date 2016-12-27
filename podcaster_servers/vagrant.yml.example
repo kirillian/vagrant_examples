@@ -1,0 +1,21 @@
+project:
+  name: &project_name sbm
+postgresql:
+  host: x.x.x.x
+  username: *project_name
+  password: password
+redis:
+  host: x.x.x.x
+secrets:
+  key: some_key
+forwarded_ports:
+  3000: 3000
+  25: 2225
+  1080: 1080
+  5432: 5432
+  27017: 27017
+aws:
+  access_key_id: some_access_key_id
+  secret_access_key: some_secret_access_key
+  keypair_name: some_key_pair_name
+  private_key_path: /PATH/TO/some_key_pair_name.pem

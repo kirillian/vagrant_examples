@@ -1,0 +1,42 @@
+{
+   "name": "postgres-server",
+   "description": "Postgres database server",
+   "default_attributes": {
+      "postgresql" : {
+         "contrib" : {
+            "extensions" : [
+               "plpgsql"
+            ],
+            "packages" : [
+               "postgresql-contrib-9.3"
+            ]
+         },
+         "config" : {
+            "listen_addresses" : "*"
+         },
+         "config_pgtune" : {
+            "db_type" : "oltp"
+         },
+         "password" : {
+            "postgres" : "md5dce2f13b5c9349d9cfe21ca6f8b278fc"
+         },
+         "pg_hba" : [
+            {
+              "type" : "host",
+              "db" : "all",
+              "user" : "all",
+              "addr" : "0.0.0.0/0",
+              "method" : "md5"
+            }
+         ]
+      }
+   },
+   "json_class": "Chef::Role",
+   "run_list": [
+      "postgresql::server",
+      "postgresql::client",
+      "postgresql::config_pgtune",
+      "monit_configs-tlq::postgres"
+   ],
+   "chef_type": "role"
+}

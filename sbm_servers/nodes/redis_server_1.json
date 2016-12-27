@@ -1,0 +1,53 @@
+{
+  "aws" : {
+    "ami" : "ami-27150617",
+    "elastic_ip" : "xxx.xxx.xxx.xxx",
+    "instance_type" : "t2.small",
+    "region" : "us-west-2",
+    "security_groups" : [
+      "sg-d820b6bc"
+    ],
+    "subnet_id" : "subnet-e294c787",
+    "tags" : {
+      "Name" : "redis-1",
+      "type" : "redis"
+    },
+    "volume_size" : 16
+  },
+  "environment":"production",
+  "authorization": {
+    "sudo": {
+      "users": ["deploy", "vagrant", "johnepperson"]
+    },
+    "passwordless": true
+  },
+  "redis-server" : {
+    "bind" : "0.0.0.0"
+  },
+  // "monit": {
+  //   "enable_emails" : false,
+  //   "mailserver" : {
+  //     // For example Mailgun or Sendgrid
+  //     "host" : "REPLACE.example.com",
+  //     "port" : "999",
+  //     "username" : "REPLACE",
+  //     "password" : "REPLACE",
+  //     "hostname" : "REPLACE"
+  //   },
+  //   "notify_emails" : ["REPLACE@example.com"],
+  //   "web_interface" : {
+  //     // the plaintext monit username and password
+  //     "allow" : ["REPLACE(USERNAME)","REPLACE(PASSWORD)"]
+  //   }
+  // },
+  "vagrant" : {
+  // See http://www.talkingquickly.co.uk/2014/08/auto-generate-vagrant-machines-from-chef-node-definitions/ for more on this
+    "exclusions" : [],
+    "name" : "redis-server-1"
+  },
+  "run_list":
+  [
+    "role[server]",
+    "role[redis-server]"
+  ]
+}

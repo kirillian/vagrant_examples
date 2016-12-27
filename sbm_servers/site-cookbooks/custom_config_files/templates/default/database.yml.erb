@@ -1,0 +1,9 @@
+production:
+  adapter: postgresql
+  encoding: unicode
+  host: <%= node['vagrant']['config']['postgresql']['url'] %>
+  database: sbm_production
+  username: sbm
+  password: <%= node['vagrant']['config']['postgresql']['password'] %>
+  pool: 30
+  reaping_frequency: 10

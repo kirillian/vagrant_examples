@@ -1,0 +1,43 @@
+{
+  "name": "mongo-server",
+  "description": "Mongo DB server",
+  "default_attributes": {
+    "mongodb" : {
+      "users" : [
+        {
+          "username" : "network_grapher",
+          "password" : "xxxxxx",
+          "roles" : [
+            "dbOwner"
+          ],
+          "database" : "network_grapher"
+        }
+      ],
+      "package_version" : "2.6.4",
+      "dbconfig_file": "/etc/mongod.conf",
+      "default_init_name": "mongod",
+      "instance_name" : "mongod",
+      "sysconfig_file" : "/etc/default/mongod",
+      "config" : {
+        "auth" : true,
+        "logpath" : "/var/log/mongo/mongod.log",
+        "dbpath" : "/var/lib/mongo"
+      }
+    },
+    "monit_configs-tlq" : {
+      "mongo" : {
+        "pidfile" : "/var/lib/mongo/mongod.lock"
+      }
+    }
+  },
+  "json_class": "Chef::Role",
+  "run_list": [
+    "recipe[mongodb::mongodb_org_repo]",
+    "recipe[mongodb]",
+    "recipe[mongodb::user_management]",
+    "recipe[monit_configs-tlq::mongo]"
+  ],
+  "chef_type": "role",
+  "override_attributes": {
+  }
+}

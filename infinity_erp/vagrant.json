@@ -1,0 +1,34 @@
+{
+  "postgresql": {
+    "contrib": {
+      "extensions": [
+        "plpgsql"
+      ],
+      "packages": [
+        "postgresql-contrib-9.3"
+      ]
+    },
+    "password": {
+      "postgres": "dce2f13b5c9349d9cfe21ca6f8b278fc"
+    },
+    "version": "9.3"
+  },
+  "rbenv": {
+    "user_installs": [{
+      "user": "vagrant",
+      "rubies": ["2.1.5"],
+      "global": "2.1.5",
+      "local": "2.1.5",
+      "gems": {
+        "2.1.5": [
+          {
+            "name": "bundler"
+          },
+          {
+            "name": "mailcatcher"
+          }
+        ]
+      }
+    }]
+  }
+}

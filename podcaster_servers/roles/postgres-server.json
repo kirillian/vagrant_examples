@@ -1,0 +1,69 @@
+{
+   "name": "postgres-server",
+   "description": "Postgres database server",
+   "default_attributes": {
+      "postgresql" : {
+        "contrib": {
+          "extensions": [
+            "plpgsql",
+            "adminpack",
+            "uuid-ossp"
+          ],
+          "packages": [
+            "postgresql-contrib-9.6"
+          ]
+        },
+        "server": {
+          "packages": [
+            "postgresql-9.6"
+          ]
+        },
+        "client": {
+          "packages": [
+            "postgresql-client-9.6",
+            "libpq-dev"
+          ]
+        },
+        "dir" : "/etc/postgresql/9.6/main",
+        "service_name" : "postgresql",
+        "setup_script" : "postgresql96-setup",
+        "enable_pgdg_apt": true,
+        "version": "9.6",
+        "config" : {
+          "dynamic_shared_memory_type": "sysv",
+          "listen_addresses" : "*"
+        },
+        "config_pgtune" : {
+          "db_type" : "oltp"
+        },
+        "pgdg": {
+          "release_apt_codename": "xenial"
+        },
+        "pg_hba" : [
+          {
+            "type": "local",
+            "db": "all",
+            "user": "all",
+            "method": "trust"
+          },
+          {
+            "type": "host",
+            "db": "all",
+            "user": "all",
+            "addr": "127.0.0.1/32",
+            "method": "trust"
+          }
+        ]
+      }
+   },
+   "json_class": "Chef::Role",
+   "run_list": [
+      "postgresql::apt_pgdg_postgresql",
+      "postgresql::server",
+      "postgresql::contrib",
+      "postgresql::client",
+      "postgresql::config_pgtune",
+      "monit_configs-tlq::postgres"
+   ],
+   "chef_type": "role"
+}

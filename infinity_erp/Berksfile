@@ -1,0 +1,13 @@
+source "https://api.berkshelf.com"
+
+
+cookbook 'apt', github: 'opscode-cookbooks/apt'
+cookbook 'build-essential', github: 'opscode-cookbooks/build-essential'
+cookbook 'imagemagick', '~> 0.2.3'
+cookbook 'nodejs', github: 'mdxp/nodejs-cookbook'
+cookbook 'postgresql', github: 'opscode-cookbooks/postgresql'
+cookbook 'rbenv', github: 'RayMangum/chef-rbenv'
+cookbook 'redisio', '~> 2.3.0'
+cookbook 'ruby_build', '~> 0.8.0'
+
+

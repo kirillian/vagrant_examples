@@ -1,0 +1,14 @@
+project:
+  name: &project_name network_grapher
+mongodb:
+  username: *project_name
+  password: password
+postgresql:
+  username: *project_name
+  password: password
+forwarded_ports:
+  3000: 3000
+  25: 2225
+  1080: 1080
+  5432: 5432
+  27017: 27017

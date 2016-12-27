@@ -1,0 +1,48 @@
+{
+   "name": "nginx-server",
+   "description": "Nginx server",
+   "default_attributes": {
+      "firewall" : {
+        "rules" : [
+          {"allow http on port 80" : {"port" : 80}}
+        ]
+      },
+      "nginx" : {
+        "default_site_enabled" : false,
+        "init_style" : "init",
+        "install_rake" : false,
+        "log_dir" : "/var/log/nginx",
+        "source" : {
+          "modules" : [
+            "nginx::http_stub_status_module",
+            "nginx::http_ssl_module",
+            "nginx::http_gzip_static_module",
+            "nginx::passenger",
+            "nginx::upload_progress_module"
+          ],
+          "passenger" : {
+            "gem_binary": "/usr/local/rbenv/shims/gem",
+            "nodejs" : "/usr/bin/nodejs",
+            "version" : "5.0.16",
+            "root" : "/usr/local/rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/passenger-5.0.16",
+            "ruby" : "/usr/local/rbenv/shims/ruby"
+          }
+        },
+        "passenger" : {
+          "gem_binary": "/usr/local/rbenv/shims/gem",
+          "nodejs" : "/usr/bin/nodejs",
+          "version" : "5.0.16",
+          "root" : "/usr/local/rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/passenger-5.0.16",
+          "ruby" : "/usr/local/rbenv/shims/ruby"
+        },
+        "user" : "nginx",
+        "version" : "1.9.4"
+      }
+   },
+   "json_class": "Chef::Role",
+   "run_list": [
+      "recipe[nginx::source]",
+      "recipe[monit_configs-tlq::nginx]"
+   ],
+   "chef_type": "role"
+}

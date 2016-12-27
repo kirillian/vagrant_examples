@@ -1,0 +1,92 @@
+{
+  "aws" : {
+    "ami" : "ami-27150617",
+    "elastic_ip" : true,
+    "instance_type" : "m3.medium",
+    "region" : "us-west-2",
+    "security_groups" : [
+      "sg-20e55e44"
+    ],
+    "subnet_id" : "subnet-37284740",
+    "tags" : {
+      "Name" : "sidekiq-1",
+      "type" : "sidekiq"
+    }
+  },
+  "environment":"production",
+  "authorization": {
+    "sudo": {
+      "users": ["deploy", "vagrant", "johnepperson"]
+    },
+    "passwordless": true
+  },
+  // "monit": {
+  //   "enable_emails" : false,
+  //   "mailserver" : {
+  //     // For example Mailgun or Sendgrid
+  //     "host" : "REPLACE.example.com",
+  //     "port" : "999",
+  //     "username" : "REPLACE",
+  //     "password" : "REPLACE",
+  //     "hostname" : "REPLACE"
+  //   },
+  //   "notify_emails" : ["REPLACE@example.com"],
+  //   "web_interface" : {
+  //     // the plaintext monit username and password
+  //     "allow" : ["REPLACE(USERNAME)","REPLACE(PASSWORD)"]
+  //   }
+  // },
+  "rbenv":{
+    "rubies": [
+      "2.2.2"
+    ],
+    "global" : "2.2.2",
+    "gems": {
+      "2.2.2" : [
+        {"name":"bundler"}
+      ]
+    }
+  },
+  "vagrant" : {
+    "config" : {
+      "postgresql" : {
+        "url" : "52.88.189.252",
+        "password" : "t0rn@d0"
+      },
+      "mongodb" : {
+        "host" : "52.24.153.59",
+        "password" : "t0rn@d0",
+        "port" : "27017"
+      },
+      "redis" : {
+        "host" : "52.26.106.63",
+        "port" : "6379"
+      },
+      "sidekiq" : {
+        "concurrency" : 25,
+        "worker_count" : 5,
+        "queues" : {
+          "events" : 2,
+          "default" : 1
+        },
+        "daemonized" : true
+      },
+      "secrets" : {
+        "key" : "04048e317444c91a21c94a6c50ad2e445b330c9f4fb5bcc1b6b6493a440d1d99b3c5a4ff2f4f4e543cff0ec3a122e431baaf82c41f14be4f187ce4ae918918ed"
+      }
+    },
+  // See http://www.talkingquickly.co.uk/2014/08/auto-generate-vagrant-machines-from-chef-node-definitions/ for more on this
+    "exclusions" : [],
+    "name" : "sidekiq-server-1",
+    "sites" : [
+      "johnepperson.com"
+    ]
+  },
+  "run_list":
+  [
+    "role[server]",
+    "role[rails-app]",
+    "role[sidekiq-server]",
+    "recipe[custom_config_files::sidekiq-server]"
+  ]
+}

@@ -1,0 +1,15 @@
+project:
+  name: &project_name ConstructionMetalProducts
+postgresql:
+  username: construction_metal_products
+  password: xxxxxx
+forwarded_ports:
+  3000: 3000
+  25: 2225
+  1080: 1080
+  5432: 5432
+  27017: 27017
+  4000: 4000
+vm:
+  cpu_count: 2
+  memory_size: 4096

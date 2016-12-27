@@ -1,0 +1,75 @@
+{
+  "aws" : {
+    "ami" : "ami-27150617",
+    "elastic_ip" : "xxx.xxx.xxx.xxx",
+    "instance_type" : "t2.small",
+    "region" : "us-west-2",
+    "security_groups" : [
+      "sg-d820b6bc"
+    ],
+    "subnet_id" : "subnet-e294c787",
+    "tags" : {
+      "Name" : "postgresql-1",
+      "type" : "postgresql"
+    },
+    "volume_size" : 128
+  },
+  "environment":"production",
+  "authorization": {
+    "sudo": {
+      "users": ["deploy", "ubuntu", "vagrant", "johnepperson"]
+    },
+    "passwordless": true
+  },
+  // "monit": {
+  //   "enable_emails" : false,
+  //   "mailserver" : {
+  //     // For example Mailgun or Sendgrid
+  //     "host" : "REPLACE.example.com",
+  //     "port" : "999",
+  //     "username" : "REPLACE",
+  //     "password" : "REPLACE",
+  //     "hostname" : "REPLACE"
+  //   },
+  //   "notify_emails" : ["REPLACE@example.com"],
+  //   "web_interface" : {
+  //     // the plaintext monit username and password
+  //     "allow" : ["REPLACE(USERNAME)","REPLACE(PASSWORD)"]
+  //   }
+  // },
+  "postgresql" : {
+    "password" : {
+      "postgres" : "<%= `echo -n '#{ENV['postgresql_password']}''#{ENV['postgresql_username']}' | openssl md5 | sed -e 's/.* /md5/'`.strip %>",
+      "<%= ENV['postgresql_username'] %>" : "<%= `echo -n '#{ENV['postgresql_password']}''#{ENV['postgresql_username']}' | openssl md5 | sed -e 's/.* /md5/'`.strip %>"
+    },
+    "pg_hba" : [
+      {
+        "type": "local",
+        "db": "all",
+        "user": "<%= ENV['postgresql_username'] %>",
+        "method": "trust"
+      },
+      {
+        "type" : "host",
+        "db" : "all",
+        "user" : "all",
+        "addr" : "0.0.0.0/0",
+        "method" : "md5"
+      }
+    ]
+  },
+  "vagrant" : {
+    "exclusions" : [],
+    "name" : "postgresql-server-1",
+    "postgresql" : {
+      "plaintext_password" : {
+        "<%= ENV['postgresql_username'] %>" : "<%= ENV['postgresql_password'] %>"
+      }
+    }
+  },
+  "run_list":
+  [
+    "role[server]",
+    "role[postgres-server]"
+  ]
+}

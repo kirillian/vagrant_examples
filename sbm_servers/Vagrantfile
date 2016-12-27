@@ -1,0 +1,178 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# https://github.com/mitchellh/vagrant-aws/issues/382
+# Due to issues with vagrant, make the following changes:
+# /opt/vagrant/embedded/gems/gems/vagrant-1.8.1/lib/vagrant/util/ssh.rb
+# @@ -120 command_options += ["-o", "IdentitiesOnly=yes"]
+# @@ +120 command_options += ["-o", "IdentitiesOnly=no"]
+
+require 'yaml'
+require 'erb'
+require File.join(File.dirname(File.expand_path(__FILE__)), 'lib', 'core_ext', 'string')
+
+Dir[File.join(File.dirname(File.expand_path(__FILE__)), 'scripts', '**/*.rb')].each do |filename|
+  require filename
+  include File.basename(filename, '.rb').classify.constantize
+end
+
+class NodeFile
+  attr_accessor :name
+
+  def initialize(name)
+    @name = name
+  end
+
+  def file_contents
+    erb? ? ERB.new(File.read(filename)).result : File.read(filename)
+  end
+
+  def json
+    JSON.parse(file_contents)
+  rescue
+    ""
+  end
+
+  def erb?
+    @erb ||= !File.exist?(base_filename)
+  end
+
+  def base_filename
+    @base_filename ||= File.join(File.dirname(File.expand_path(__FILE__)), 'nodes', "#{name}.json")
+  end
+
+  def filename
+    @filename ||= erb? ? "#{base_filename}.erb" : base_filename
+  end
+
+  def self.json(name)
+    new(name).json
+  end
+end
+
+# CONSTANTS
+VAGRANTFILE_API_VERSION = "2"
+CONFIG_TIMEZONE = "UTC"
+
+REQUIRED_PLUGINS = %w( vagrant-vbguest vagrant-aws vagrant-omnibus vagrant-berkshelf)
+
+def missing_plugins
+  @missing_plugins ||= REQUIRED_PLUGINS.reject { |plugin| Vagrant.has_plugin? plugin }
+end
+
+def missing_multiple_plugins?
+  missing_plugins.size > 1
+end
+
+def missing_plugins_message
+  "The following plugin#{'s' if missing_multiple_plugins?} are required: #{missing_plugins.join(" ")}\n" \
+  "Install #{missing_multiple_plugins? ? 'them' : 'it'} with this command: 'vagrant plugin install #{missing_plugins.join(" ")}'"
+end
+
+fail "Required Vagrant plugins not installed. Please install before continuing\n#{missing_plugins_message}" if missing_plugins.any?
+
+settings = YAML.load_file 'vagrant.yml'
+
+%w(postgresql redis secrets).each do |config_group|
+  next if settings[config_group].nil?
+
+  settings[config_group].keys.each do |key|
+    ENV["#{config_group}_#{key}"] = settings[config_group][key]
+  end
+end
+
+# Assumes that the Vagrantfile is in the root of our
+# Chef repository.
+root_dir = File.dirname(File.expand_path(__FILE__))
+
+erb_node_filenames = Dir[File.join(root_dir,'nodes','*.json.erb')].map{ |name| File.basename(name, '.json.erb') }
+node_filenames = Dir[File.join(root_dir,'nodes','*.json')].map{ |name| File.basename(name, '.json') }
+
+# Assumes that the node definitions are in the nodes
+# subfolder
+nodes = [*erb_node_filenames, *node_filenames]
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "ubuntu/trusty64"
+
+  # This should match the version specified in your
+  # Gemfile
+  config.omnibus.chef_version = "11.16.0"
+  config.ssh.forward_agent = true
+
+  config.berkshelf.enabled = false
+
+  # Iterate over each of the JSON files
+  nodes.each do |filename|
+    puts "parsing #{filename}"
+    node_json = NodeFile.json(filename).merge(environment_variables: settings["env"])
+
+    # Only process the node if it has a vagrant section
+    if(node_json["vagrant"])
+      puts "Node JSON present"
+      # Allow us to remove certain items from the run_list if we're
+      # using vagrant. Useful for things like networking configuration
+      # which may not apply.
+      if exclusions = node_json["vagrant"]["exclusions"]
+        exclusions.each do |exclusion|
+          if node_json["run_list"].delete(exclusion)
+            puts "removed #{exclusion} from the run list"
+          end
+        end
+      end
+
+      vagrant_name = node_json["vagrant"]["name"]
+      vagrant_ip = node_json["vagrant"]["ip"]
+
+      config.vm.define vagrant_name do |vagrant|
+
+        vagrant.vm.provider :aws do |aws, override|
+          aws.access_key_id = settings['aws']['access_key_id']
+          aws.secret_access_key = settings['aws']['secret_access_key']
+          aws.keypair_name = settings['aws']['keypair_name']
+          aws.ami = node_json['aws']['ami'] # "ami-27150617" # hvm:ebs
+          aws.region = node_json['aws']['region'] # "us-west-2"
+          aws.instance_type = node_json['aws']['instance_type'] # "t2.micro"
+          aws.private_ip_address = node_json['aws']['private_ip_address'] # "10.0.0.11"
+          aws.security_groups = node_json['aws']['security_groups'] # ["sg-20e55e44"]
+          aws.subnet_id = node_json['aws']['subnet_id'] # "subnet-37284740"
+          aws.elastic_ip = node_json['aws']['elastic_ip'] # true
+          aws.tags = node_json['aws']['tags']
+
+          override.vm.box = "dummy"
+          override.ssh.username = "ubuntu"
+          override.ssh.private_key_path = settings['aws']['private_key_path']
+        end
+
+        vagrant.vm.hostname = vagrant_name
+
+        # Only use private networking if we specified an
+        # IP. Otherwise fallback to DHCP
+        if vagrant_ip
+          vagrant.vm.network :private_network, ip: vagrant_ip
+        end
+
+        vagrant.vm.provision :shell, inline: set_timezone_script(CONFIG_TIMEZONE)
+
+        vagrant.vm.provision "chef_solo" do |chef|
+          # Use berks-cookbooks not cookbooks and remember
+          # to explicitly vendor berkshelf cookbooks
+          chef.cookbooks_path = ["berks-cookbooks", "site-cookbooks"]
+          chef.data_bags_path = "data_bags"
+          chef.roles_path = "roles"
+
+          # Instead of using add_recipe and add_role, just
+          # assign the node definition json, this will take
+          # care of populating the run_list.
+          chef.json = node_json
+        end
+
+        if node_json['aws']['tags']['type'] == "postgresql"
+          node_json['postgresql']['password'].keys.reject{|key| key == "postgres" }.each do |username|
+            vagrant.vm.provision :shell, inline: create_postgres_user(username, node_json['vagrant']['postgresql']['plaintext_password'][username])
+          end
+        end
+      end
+    end
+  end
+end

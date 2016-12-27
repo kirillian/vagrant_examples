@@ -1,0 +1,9 @@
+production:
+  adapter: postgresql
+  encoding: unicode
+  host: <%= node['vagrant']['config']['postgresql']['url'] %>
+  database: network_grapher_production
+  username: network_grapher
+  password: <%= node['vagrant']['config']['postgresql']['password'] %>
+  pool: 30
+  reaping_frequency: 10

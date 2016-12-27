@@ -1,0 +1,15 @@
+server {
+  listen   80;
+  server_name johnepperson.com;
+
+  access_log  /var/log/nginx/localhost.access.log;
+
+  passenger_enabled on;
+  passenger_app_env production;
+
+  root   /var/www/<%= @site %>/current/public;
+
+  location ~ ^/assets/  {
+    try_files $uri =404;
+  }
+}

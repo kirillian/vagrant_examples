@@ -1,0 +1,51 @@
+{
+  "postgresql": {
+    "contrib": {
+      "extensions": [
+        "plpgsql",
+        "adminpack",
+        "uuid-ossp"
+      ],
+      "packages": [
+        "postgresql-contrib-9.6"
+      ]
+    },
+    "password": {
+      "postgres": "dce2f13b5c9349d9cfe21ca6f8b278fc"
+    },
+    "server": {
+      "packages": [
+        "postgresql-9.6"
+      ]
+    },
+    "client": {
+      "packages": [
+        "postgresql-client-9.6",
+        "libpq-dev"
+      ]
+    },
+    "dir" : "/etc/postgresql/9.6/main",
+    "service_name" : "postgresql",
+    "setup_script" : "postgresql96-setup",
+    "enable_pgdg_apt": true,
+    "version": "9.6"
+  },
+  "rbenv": {
+    "user_installs": [{
+      "user": "ubuntu",
+      "rubies": ["2.3.1"],
+      "global": "2.3.1",
+      "local": "2.3.1",
+      "gems": {
+        "2.3.1": [
+          {
+            "name": "bundler"
+          },
+          {
+            "name": "mailcatcher"
+          }
+        ]
+      }
+    }]
+  }
+}

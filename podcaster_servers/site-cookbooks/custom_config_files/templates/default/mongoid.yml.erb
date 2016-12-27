@@ -1,0 +1,10 @@
+production:
+  sessions:
+    default:
+      database: sbm
+      username: sbm
+      password: <%= node['vagrant']['config']['mongodb']['password'] %>
+      hosts:
+        - <%= node['vagrant']['config']['mongodb']['host'] %>:<%= node['vagrant']['config']['mongodb']['port'] %>
+      options:
+  options:

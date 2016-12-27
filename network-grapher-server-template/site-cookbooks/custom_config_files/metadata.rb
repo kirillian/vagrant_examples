@@ -1,0 +1,7 @@
+name             'custom_config_files'
+maintainer       'John Epperson'
+maintainer_email 'j.epperson@verizon.net'
+license          'All rights reserved'
+description      'Adds config files to server'
+long_description 'Adds config files to server'
+version          '0.1.0'

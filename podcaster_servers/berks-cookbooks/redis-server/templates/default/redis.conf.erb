@@ -1,0 +1,31 @@
+daemonize <%= node['redis-server']['daemonize'] %>
+
+pidfile <%= node['redis-server']['pidfile'] %>
+
+logfile <%= node['redis-server']['logfile'] %>
+
+port <%= node['redis-server']['port'] %>
+
+bind <%= node['redis-server']['bind'] %>
+
+timeout <%= node['redis-server']['timeout'] %>
+
+loglevel <%= node['redis-server']['loglevel'] %>
+
+databases <%= node['redis-server']['databases'] %>
+
+<% node['redis-server']['save'].each do |save_entry| %>
+  <%= "save #{save_entry}" %>
+<% end %>
+
+rdbcompression <%= node['redis-server']['rdbcompression'] %>
+
+dbfilename <%= node['redis-server']['dbfilename'] %>
+
+dir <%= node['redis-server']['dir'] %>
+
+appendonly <%= node['redis-server']['appendonly'] %>
+
+<% node['redis-server']['additional_configuration_values'].each do |key, value| %>
+  <%= "#{key} #{value}" %>
+<% end %>

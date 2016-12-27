@@ -1,0 +1,35 @@
+{
+   "name": "nginx-server",
+   "description": "Nginx server",
+   "default_attributes": {
+      "firewall" : {
+        "rules" : [
+          {"allow http on port 80" : {"port" : 80}}
+        ]
+      },
+      "nginx" : {
+        "checksum": "4a667f40f9f3917069db1dea1f2d5baa612f1fa19378aadf71502e846a424610",
+        "default_site_enabled" : false,
+        "init_style" : "upstart",
+        "log_dir" : "/var/log/nginx",
+        "package_name": "nginx-extras",
+        "passenger": {
+          "checksum": "4a667f40f9f3917069db1dea1f2d5baa612f1fa19378aadf71502e846a424610",
+          "install_method": "package",
+          "version": "5.0.30"
+        },
+        "repo_source": "passenger",
+        "source": {
+          "checksum": "4a667f40f9f3917069db1dea1f2d5baa612f1fa19378aadf71502e846a424610"
+        },
+        "user": "www-data",
+        "version" : "1.11.3"
+      }
+   },
+   "json_class": "Chef::Role",
+   "run_list": [
+      "recipe[chef_nginx]",
+      "recipe[monit_configs-tlq::nginx]"
+   ],
+   "chef_type": "role"
+}
